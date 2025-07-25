@@ -26,7 +26,9 @@
       height: 100%;
     }
     .spot img {
-      height: 30px;
+      height: 100%;
+      width: auto;
+      object-fit: contain;
       display: block;
     }
     .ticker-wrap {
@@ -40,7 +42,7 @@
     .ticker {
       display: flex;
       white-space: nowrap;
-      animation: slide 10s linear infinite;
+      animation: slide 20s linear infinite;
     }
     @keyframes slide {
       0% { transform: translateX(100%); }
@@ -83,8 +85,14 @@
       { id: "binancecoin", symbol: "BNB", logo: "bnb-bnb-logo.png" },
       { id: "solana", symbol: "SOL", logo: "solana-sol-logo.png" },
       { id: "ripple", symbol: "XRP", logo: "xrp-xrp-logo.png" },
-      { id: "dogecoin", symbol: "DOGE", logo: "dogecoin-doge-logo.png" }
-      // Add more here if needed
+      { id: "dogecoin", symbol: "DOGE", logo: "dogecoin-doge-logo.png" },
+      { id: "avalanche-2", symbol: "AVAX", logo: "avalanche-avax-logo.png" },
+      { id: "cardano", symbol: "ADA", logo: "cardano-ada-logo.png" },
+      { id: "chainlink", symbol: "LINK", logo: "chainlink-link-logo.png" },
+      { id: "polkadot", symbol: "DOT", logo: "polkadot-new-dot-logo.png" },
+      { id: "shiba-inu", symbol: "SHIB", logo: "shiba-inu-shib-logo.png" },
+      { id: "the-open-network", symbol: "TON", logo: "toncoin-ton-logo.png" },
+      { id: "tron", symbol: "TRX", logo: "tron-trx-logo.png" }
     ];
 
     async function fetchPrices() {
@@ -98,7 +106,7 @@
         ticker.innerHTML = "";
 
         coins.forEach((coin) => {
-          const price = data[coin.id]?.usd?.toFixed(2);
+          const price = data[coin.id]?.usd?.toFixed(4) || data[coin.id]?.usd?.toFixed(2);
           if (!price) return;
 
           const coinEl = document.createElement("a");
