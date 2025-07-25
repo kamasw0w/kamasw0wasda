@@ -15,15 +15,17 @@
     .container {
       display: flex;
       height: 100%;
+      position: relative;
     }
     .spot {
-      width: 70px; /* ⬅️ Smaller square for centered Spot logo */
+      width: 80px; /* Slightly wider for proper centering */
       background: #fff;
       border-right: 1px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
+      margin-left: -5px; /* Move the square slightly left */
     }
     .spot img {
       height: 100%;
@@ -38,6 +40,7 @@
       height: 100%;
       display: flex;
       align-items: center;
+      padding-left: 20px; /* Added spacing so text doesn’t hit the Spot logo */
     }
     .ticker {
       display: flex;
@@ -115,7 +118,7 @@
           `;
         }).join("");
 
-        ticker.innerHTML = coinItems + coinItems; // Duplicate to loop
+        ticker.innerHTML = coinItems + coinItems;
       } catch (err) {
         console.error("Error fetching prices:", err);
       }
