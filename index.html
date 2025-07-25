@@ -77,37 +77,37 @@
   </div>
 
   <script>
-    const coins = ["bitcoin", "ethereum", "binancecoin", "solana", "ripple", "dogecoin"];
-    const coinInfo = {
-      bitcoin: { symbol: "BTC" },
-      ethereum: { symbol: "ETH" },
-      binancecoin: { symbol: "BNB" },
-      solana: { symbol: "SOL" },
-      ripple: { symbol: "XRP" },
-      dogecoin: { symbol: "DOGE" }
-    };
+    const coins = [
+      { id: "bitcoin", symbol: "BTC", logo: "bitcoin-btc-logo.png" },
+      { id: "ethereum", symbol: "ETH", logo: "ethereum-eth-logo.png" },
+      { id: "binancecoin", symbol: "BNB", logo: "bnb-bnb-logo.png" },
+      { id: "solana", symbol: "SOL", logo: "solana-sol-logo.png" },
+      { id: "ripple", symbol: "XRP", logo: "xrp-xrp-logo.png" },
+      { id: "dogecoin", symbol: "DOGE", logo: "dogecoin-doge-logo.png" }
+      // Add more here if needed
+    ];
 
     async function fetchPrices() {
       try {
-        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`);
+        const ids = coins.map(c => c.id).join(",");
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
+        );
         const data = await res.json();
         const ticker = document.getElementById("ticker");
         ticker.innerHTML = "";
 
-        coins.forEach((coinKey) => {
-          const info = coinInfo[coinKey];
-          if (!info || !data[coinKey]) return;
-
-          const price = data[coinKey].usd.toFixed(2);
-          const iconUrl = `https://coinicons-api.vercel.app/api/icon/${info.symbol.toLowerCase()}`;
+        coins.forEach((coin) => {
+          const price = data[coin.id]?.usd?.toFixed(2);
+          if (!price) return;
 
           const coinEl = document.createElement("a");
           coinEl.className = "coin";
           coinEl.href = "https://spottrading.com";
           coinEl.target = "_blank";
           coinEl.innerHTML = `
-            <img src="${iconUrl}" alt="${info.symbol}" />
-            ${info.symbol}: $${price}
+            <img src="${coin.logo}" alt="${coin.symbol}" />
+            ${coin.symbol}: $${price}
           `;
           ticker.appendChild(coinEl);
         });
