@@ -3,191 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <title>Crypto Widget</title>
-  <meta name="viewport" content="width=1920,height=50" />
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #ffffff;
-      width: 1920px;
-      height: 50px;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      width: 600px;
+      height: 200px;
       overflow: hidden;
     }
-
     .container {
       display: flex;
-      align-items: center;
       height: 100%;
-      background-color: #ffffff;
     }
-
-    .spot-section {
+    .spot {
+      width: 100px;
+      background: #fff;
+      border-right: 1px solid #ddd;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3px;
-      border-right: 2px solid #ddd;
       height: 100%;
-      width: 60px;
-      background-color: #ffffff;
     }
-
-    .spot-section span {
-      font-size: 10px;
-      font-weight: bold;
-      color: #000;
-      text-align: center;
-      margin-bottom: 2px;
+    .spot img {
+      height: 40px;
+      display: block;
     }
-
-    .spot-section img {
-      height: 24px;
-      cursor: pointer;
-    }
-
-    .ticker-wrapper {
+    .ticker-wrap {
+      flex-grow: 1;
       overflow: hidden;
       position: relative;
-      flex-grow: 1;
-      background-color: #ffffff;
-    }
-
-    .ticker {
+      height: 100%;
       display: flex;
       align-items: center;
+    }
+    .ticker {
+      display: flex;
       white-space: nowrap;
-      background-color: #ffffff;
-      animation: slide 20s linear infinite;
+      animation: slide 12s linear infinite;
     }
-
     @keyframes slide {
-      from { transform: translateX(100%); }
-      to { transform: translateX(-100%); }
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
     }
-
     .coin {
       display: inline-flex;
       align-items: center;
-      margin: 0 12px;
-      font-size: 10px;
+      margin: 0 16px;
+      font-size: 14px;
       text-decoration: none;
       color: #000;
     }
-
     .coin img {
-      width: 14px;
-      height: 14px;
-      margin-right: 4px;
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
     }
-
     .footer {
       position: absolute;
-      bottom: 1px;
+      bottom: 5px;
       left: 10px;
-      font-size: 8px;
+      font-size: 12px;
       color: #888;
-      background-color: #ffffff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="spot-section">
-      <span>Trade on</span>
+    <div class="spot">
       <a href="https://spottrading.com" target="_blank">
-        <img src="/kamasw0wasda/spot-logo.png" alt="SPOT" onerror="this.src='https://placehold.co/24x24?text=SPOT'; console.error('SPOT logo failed to load: /kamasw0wasda/spot-logo.png');" />
+        <img src="spot-logo.png" alt="Spot Logo" />
       </a>
     </div>
-    <div class="ticker-wrapper">
-      <div class="ticker" id="ticker"></div>
+    <div class="ticker-wrap">
+      <div id="ticker" class="ticker"></div>
     </div>
   </div>
   <div class="footer">spottrading.com</div>
 
   <script>
-    const coins = [
-      "bitcoin",
-      "ethereum",
-      "binancecoin",
-      "solana",
-      "ripple",
-      "dogecoin",
-      "avalanche",
-      "cardano",
-      "chainlink",
-      "polkadot-new",
-      "shiba-inu",
-      "toncoin",
-      "tron"
-    ];
-
+    const coins = ["bitcoin", "ethereum", "binancecoin", "solana", "ripple", "dogecoin"];
     const coinInfo = {
-      bitcoin: { symbol: "BTC", filename: "bitcoin-btc-logo.png" },
-      ethereum: { symbol: "ETH", filename: "ethereum-eth-logo.png" },
-      binancecoin: { symbol: "BNB", filename: "bnb-bnb-logo.png" },
-      solana: { symbol: "SOL", filename: "solana-sol-logo.png" },
-      ripple: { symbol: "XRP", filename: "xrp-xrp-logo.png" },
-      dogecoin: { symbol: "DOGE", filename: "dogecoin-doge-logo.png" },
-      avalanche: { symbol: "AVAX", filename: "avalanche-avax-logo.png" },
-      cardano: { symbol: "ADA", filename: "cardano-ada-logo.png" },
-      chainlink: { symbol: "LINK", filename: "chainlink-link-logo.png" },
-      "polkadot-new": { symbol: "DOT", filename: "polkadot-new-dot-logo.png" },
-      "shiba-inu": { symbol: "SHIB", filename: "shiba-inu-shib-logo.png" },
-      toncoin: { symbol: "TON", filename: "toncoin-ton-logo.png" },
-      tron: { symbol: "TRX", filename: "tron-trx-logo.png" }
+      bitcoin: { symbol: "BTC" },
+      ethereum: { symbol: "ETH" },
+      binancecoin: { symbol: "BNB" },
+      solana: { symbol: "SOL" },
+      ripple: { symbol: "XRP" },
+      dogecoin: { symbol: "DOGE" }
     };
-
-    const ticker = document.getElementById("ticker");
 
     async function fetchPrices() {
       try {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`
-        );
-        if (!res.ok) throw new Error(`API request failed: ${res.status}`);
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`);
         const data = await res.json();
-
+        const ticker = document.getElementById("ticker");
         ticker.innerHTML = "";
 
-        // Duplicate coins for seamless ticker animation
-        [1, 2].forEach(() => {
-          coins.forEach((coinKey) => {
-            const info = coinInfo[coinKey];
-            if (!info || !data[coinKey]) {
-              console.warn(`No data for ${coinKey}`);
-              return;
-            }
+        coins.forEach((coinKey) => {
+          const info = coinInfo[coinKey];
+          if (!info || !data[coinKey]) return;
 
-            const price = data[coinKey].usd.toFixed(2);
-            const iconUrl = `/kamasw0wasda/${info.filename}`;
+          const price = data[coinKey].usd.toFixed(2);
+          const iconUrl = `https://coinicons-api.vercel.app/api/icon/${info.symbol.toLowerCase()}`;
 
-            const coinEl = document.createElement("a");
-            coinEl.className = "coin";
-            coinEl.href = "https://spottrading.com";
-            coinEl.target = "_blank";
-            coinEl.innerHTML = `
-              <img src="${iconUrl}" alt="${info.symbol}" onerror="this.src='https://placehold.co/14x14?text=${info.symbol}'; console.error('Failed to load logo: ${iconUrl}');" />
-              ${info.symbol}: $${price}
-            `;
-            ticker.appendChild(coinEl);
-          });
+          const coinEl = document.createElement("a");
+          coinEl.className = "coin";
+          coinEl.href = "https://spottrading.com";
+          coinEl.target = "_blank";
+          coinEl.innerHTML = `
+            <img src="${iconUrl}" alt="${info.symbol}" />
+            ${info.symbol}: $${price}
+          `;
+          ticker.appendChild(coinEl);
         });
       } catch (err) {
-        console.error("Failed to fetch prices:", err);
-        // Static fallback with logos
-        ticker.innerHTML = coins.map(coinKey => {
-          const info = coinInfo[coinKey];
-          return `<a class="coin" href="https://spottrading.com" target="_blank">
-                    <img src="/kamasw0wasda/${info.filename}" alt="${info.symbol}" onerror="this.src='https://placehold.co/14x14?text=${info.symbol}'; console.error('Failed to load logo: /kamasw0wasda/${info.filename}');" />
-                    ${info.symbol}: $--.--</a>`;
-        }).join("");
+        console.error("Error fetching prices:", err);
       }
     }
 
     fetchPrices();
-    setInterval(fetchPrices, 30000); // Update every 30 seconds
+    setInterval(fetchPrices, 15000);
   </script>
 </body>
 </html>
