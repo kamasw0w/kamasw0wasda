@@ -183,13 +183,13 @@
       );
       const data = await res.json();
 
-      ticker.innerHTML = ""; // Clear previous
+      ticker.innerHTML = "";
 
       coins.forEach((coinKey) => {
         const info = coinInfo[coinKey];
-        if (!info) return;
+        if (!info || !data[coinKey]) return;
 
-        const price = data[coinKey]?.usd?.toFixed(2);
+        const price = data[coinKey].usd.toFixed(2);
         const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
 
         const coinEl = document.createElement("a");
@@ -208,5 +208,5 @@
   }
 
   fetchPrices();
-  setInterval(fetchPrices, 15000); // update every 15s
+  setInterval(fetchPrices, 15000);
 </script>
