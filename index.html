@@ -17,7 +17,7 @@
       height: 100%;
     }
     .spot {
-      width: 100px;
+      width: 70px; /* 🔧 Reduced from 100px to center logo */
       background: #fff;
       border-right: 1px solid #ddd;
       display: flex;
@@ -31,7 +31,6 @@
       width: auto;
       object-fit: contain;
       display: block;
-      transform: translateX(-10px); /* Shift logo left for visual centering */
     }
     .ticker-wrap {
       position: relative;
@@ -71,64 +70,3 @@
 <body>
   <div class="container">
     <div class="spot">
-      <a href="https://spottrading.com" target="_blank">
-        <img src="spot-logo.png" alt="Spot Logo" />
-      </a>
-    </div>
-    <div class="ticker-wrap">
-      <div id="ticker" class="ticker"></div>
-    </div>
-  </div>
-
-  <script>
-    const coins = [
-      { id: "bitcoin", symbol: "BTC", logo: "bitcoin-btc-logo.png" },
-      { id: "ethereum", symbol: "ETH", logo: "ethereum-eth-logo.png" },
-      { id: "binancecoin", symbol: "BNB", logo: "bnb-bnb-logo.png" },
-      { id: "solana", symbol: "SOL", logo: "solana-sol-logo.png" },
-      { id: "ripple", symbol: "XRP", logo: "xrp-xrp-logo.png" },
-      { id: "dogecoin", symbol: "DOGE", logo: "dogecoin-doge-logo.png" },
-      { id: "avalanche-2", symbol: "AVAX", logo: "avalanche-avax-logo.png" },
-      { id: "cardano", symbol: "ADA", logo: "cardano-ada-logo.png" },
-      { id: "chainlink", symbol: "LINK", logo: "chainlink-link-logo.png" },
-      { id: "polkadot", symbol: "DOT", logo: "polkadot-new-dot-logo.png" },
-      { id: "shiba-inu", symbol: "SHIB", logo: "shiba-inu-shib-logo.png" },
-      { id: "the-open-network", symbol: "TON", logo: "toncoin-ton-logo.png" },
-      { id: "tron", symbol: "TRX", logo: "tron-trx-logo.png" }
-    ];
-
-    async function fetchPrices() {
-      try {
-        const ids = coins.map(c => c.id).join(",");
-        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
-        const data = await res.json();
-        const ticker = document.getElementById("ticker");
-
-        const coinItems = coins.map((coin) => {
-          const priceData = data[coin.id];
-          if (!priceData || !priceData.usd) {
-            console.warn(`Missing price for ${coin.id}`);
-            return '';
-          }
-
-          const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
-
-          return `
-            <a class="coin" href="https://spottrading.com" target="_blank">
-              <img src="${coin.logo}" alt="${coin.symbol}" />
-              ${coin.symbol}: $${price}
-            </a>
-          `;
-        }).join("");
-
-        ticker.innerHTML = coinItems + coinItems; // Looping effect
-      } catch (err) {
-        console.error("Error fetching prices:", err);
-      }
-    }
-
-    fetchPrices();
-    setInterval(fetchPrices, 15000);
-  </script>
-</body>
-</html>
