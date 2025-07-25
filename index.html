@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=600,height=200" />
+  <title>Crypto Widget</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      width: 600px;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .spot-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 15px;
+      background: #ffffff;
+      border-right: 2px solid #e0e0e0;
+      height: 100%;
+    }
+
+    .spot-section img {
+      height: 40px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .spot-section span {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .ticker-wrapper {
+      overflow: hidden;
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .ticker {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: slide 20s linear infinite;
+    }
+
+    @keyframes slide {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
+    .coin {
+      display: inline-flex;
+      align-items: center;
+      margin: 0 20px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .coin img {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 5px;
+      left: 10px;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spot-section">
+      <a href="https://t.co/FWAaTbZU7I" target="_blank">
+        <img src="spot-logo.png" alt="SPOT" />
+      </a>
+      <span>Trade on SPOT</span>
+    </div>
+    <div class="ticker-wrapper">
+      <div class="ticker" id="ticker"></div>
+    </div>
+  </div>
+  <div class="footer">spottrading.com</div>
+
+  <script>
+    const coins = [
+      "bitcoin",
+      "ethereum",
+      "binancecoin",
+      "solana",
+      "ripple",
+      "dogecoin"
+    ];
+
+    const coinInfo = {
+      bitcoin: { symbol: "BTC", iconId: 1 },
+      ethereum: { symbol: "ETH", iconId: 279 },
+      binancecoin: { symbol: "BNB", iconId: 825 },
+      solana: { symbol: "SOL", iconId: 4128 },
+      ripple: { symbol: "XRP", iconId: 44 },
+      dogecoin: { symbol: "DOGE", iconId: 74 }
+    };
+
+    const ticker = document.getElementById("ticker");
+
+    async function fetchPrices() {
+      try {
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(
+            ","
+          )}&vs_currencies=usd`
+        );
+        const data = await res.json();
+
+        ticker.innerHTML = ""; // Clear previous
+
+        coins.forEach((coin) => {
+          const price = data[coin].usd.toFixed(2);
+          const info = coinInfo[coin];
+          const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
+
+          const coinEl = document.createElement("a");
+          coinEl.className = "coin";
+          coinEl.href = "https://t.co/FWAaTbZU7";
+          coinEl.target = "_blank";
+          coinEl.innerHTML = `
+            <img src="${iconUrl}" alt="${info.symbol}" />
+            ${info.symbol}: $${price}
+          `;
+          ticker.appendChild(coinEl);
+        });
+      } catch (err) {
+        console.error("Failed to fetch prices:", err);
+      }
+    }
+
+    fetchPrices();
+    setInterval(fetchPrices, 15000); // update every 15s
+  </script>
+</body>
+</html>
