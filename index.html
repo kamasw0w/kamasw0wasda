@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=600,height=200" />
   <title>Crypto Widget</title>
+  <meta name="viewport" content="width=600,height=200" />
   <style>
     body {
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #fff;
+      background: #ffffff;
       width: 600px;
       height: 200px;
       overflow: hidden;
@@ -26,10 +26,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px 15px;
-      background: #ffffff;
-      border-right: 2px solid #e0e0e0;
+      padding: 10px;
+      border-right: 2px solid #ddd;
       height: 100%;
+      width: 100px;
     }
 
     .spot-section img {
@@ -42,6 +42,7 @@
       font-size: 14px;
       font-weight: bold;
       color: #000;
+      text-align: center;
     }
 
     .ticker-wrapper {
@@ -54,7 +55,7 @@
       display: flex;
       align-items: center;
       white-space: nowrap;
-      animation: slide 20s linear infinite;
+      animation: slide 15s linear infinite;
     }
 
     @keyframes slide {
@@ -89,8 +90,8 @@
 <body>
   <div class="container">
     <div class="spot-section">
-      <a href="https://t.co/FWAaTbZU7I" target="_blank">
-        <img src="spot-logo.png" alt="SPOT" />
+      <a href="https://t.co/FWAaTbZU7" target="_blank">
+        <img src="https://kamasw0w.github.io/kamasw0wasda/spot-logo.png" alt="SPOT" />
       </a>
       <span>Trade on SPOT</span>
     </div>
@@ -111,31 +112,30 @@
     ];
 
     const coinInfo = {
-  bitcoin: { symbol: "BTC", iconId: 1 },
-  ethereum: { symbol: "ETH", iconId: 279 },
-  binancecoin: { symbol: "BNB", iconId: 825 },
-  solana: { symbol: "SOL", iconId: 4128 },
-  ripple: { symbol: "XRP", iconId: 44 },
-  dogecoin: { symbol: "DOGE", iconId: 74 }
-};
-
+      bitcoin: { symbol: "BTC", iconId: 1 },
+      ethereum: { symbol: "ETH", iconId: 279 },
+      binancecoin: { symbol: "BNB", iconId: 825 },
+      solana: { symbol: "SOL", iconId: 4128 },
+      ripple: { symbol: "XRP", iconId: 44 },
+      dogecoin: { symbol: "DOGE", iconId: 74 }
+    };
 
     const ticker = document.getElementById("ticker");
 
     async function fetchPrices() {
       try {
         const res = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(
-            ","
-          )}&vs_currencies=usd`
+          `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`
         );
         const data = await res.json();
 
-        ticker.innerHTML = ""; // Clear previous
+        ticker.innerHTML = "";
 
-        coins.forEach((coin) => {
-          const price = data[coin].usd.toFixed(2);
-          const info = coinInfo[coin];
+        coins.forEach((coinKey) => {
+          const info = coinInfo[coinKey];
+          if (!info || !data[coinKey]) return;
+
+          const price = data[coinKey].usd.toFixed(2);
           const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
 
           const coinEl = document.createElement("a");
@@ -153,60 +153,8 @@
       }
     }
 
-   <script>
-  const coins = [
-    "bitcoin",
-    "ethereum",
-    "binancecoin",
-    "solana",
-    "ripple",
-    "dogecoin"
-  ];
-
-  const coinInfo = {
-    bitcoin: { symbol: "BTC", iconId: 1 },
-    ethereum: { symbol: "ETH", iconId: 279 },
-    binancecoin: { symbol: "BNB", iconId: 825 },
-    solana: { symbol: "SOL", iconId: 4128 },
-    ripple: { symbol: "XRP", iconId: 44 },
-    dogecoin: { symbol: "DOGE", iconId: 74 }
-  };
-
-  const ticker = document.getElementById("ticker");
-
-  async function fetchPrices() {
-    try {
-      const res = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(
-          ","
-        )}&vs_currencies=usd`
-      );
-      const data = await res.json();
-
-      ticker.innerHTML = "";
-
-      coins.forEach((coinKey) => {
-        const info = coinInfo[coinKey];
-        if (!info || !data[coinKey]) return;
-
-        const price = data[coinKey].usd.toFixed(2);
-        const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
-
-        const coinEl = document.createElement("a");
-        coinEl.className = "coin";
-        coinEl.href = "https://t.co/FWAaTbZU7";
-        coinEl.target = "_blank";
-        coinEl.innerHTML = `
-          <img src="${iconUrl}" alt="${info.symbol}" />
-          ${info.symbol}: $${price}
-        `;
-        ticker.appendChild(coinEl);
-      });
-    } catch (err) {
-      console.error("Failed to fetch prices:", err);
-    }
-  }
-
-  fetchPrices();
-  setInterval(fetchPrices, 15000);
-</script>
+    fetchPrices();
+    setInterval(fetchPrices, 15000);
+  </script>
+</body>
+</html>
