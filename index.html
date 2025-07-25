@@ -19,7 +19,7 @@
       display: flex;
       align-items: center;
       height: 100%;
-      background-color: #ffffff; /* Ensure container is white */
+      background-color: #ffffff;
     }
 
     .spot-section {
@@ -31,7 +31,7 @@
       border-right: 2px solid #ddd;
       height: 100%;
       width: 100px;
-      background-color: #ffffff; /* Ensure spot section is white */
+      background-color: #ffffff;
     }
 
     .spot-section img {
@@ -51,15 +51,15 @@
       overflow: hidden;
       position: relative;
       flex-grow: 1;
-      background-color: #ffffff; /* Ensure ticker background is white */
+      background-color: #ffffff;
     }
 
     .ticker {
       display: flex;
       align-items: center;
       white-space: nowrap;
-      background-color: #ffffff; /* Ensure ticker content is white */
-      animation: slide 20s linear infinite; /* Adjusted duration for smoother animation */
+      background-color: #ffffff;
+      animation: slide 20s linear infinite;
     }
 
     @keyframes slide {
@@ -88,7 +88,7 @@
       left: 10px;
       font-size: 12px;
       color: #888;
-      background-color: #ffffff; /* Ensure footer background is white */
+      background-color: #ffffff;
     }
   </style>
 </head>
@@ -96,7 +96,7 @@
   <div class="container">
     <div class="spot-section">
       <a href="https://spottrading.com" target="_blank">
-        <img src="/kamasw0wasda/images/spot-logo.png" alt="SPOT" onerror="this.src='https://via.placeholder.com/40?text=SPOT'" />
+        <img src="/kamasw0wasda/spot-logo.png" alt="SPOT" onerror="this.src='https://placehold.co/40x40?text=SPOT'; console.error('SPOT logo failed to load: /kamasw0wasda/spot-logo.png');" />
       </a>
       <span>Trade on SPOT</span>
     </div>
@@ -132,7 +132,7 @@
         const res = await fetch(
           `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`
         );
-        if (!res.ok) throw new Error("API request failed");
+        if (!res.ok) throw new Error(`API request failed: ${res.status}`);
         const data = await res.json();
 
         ticker.innerHTML = "";
@@ -141,17 +141,20 @@
         [1, 2].forEach(() => {
           coins.forEach((coinKey) => {
             const info = coinInfo[coinKey];
-            if (!info || !data[coinKey]) return;
+            if (!info || !data[coinKey]) {
+              console.warn(`No data for ${coinKey}`);
+              return;
+            }
 
             const price = data[coinKey].usd.toFixed(2);
-            const iconUrl = `/kamasw0wasda/images/${info.filename}`;
+            const iconUrl = `/kamasw0wasda/${info.filename}`;
 
             const coinEl = document.createElement("a");
             coinEl.className = "coin";
             coinEl.href = "https://spottrading.com";
             coinEl.target = "_blank";
             coinEl.innerHTML = `
-              <img src="${iconUrl}" alt="${info.symbol}" onerror="this.src='https://via.placeholder.com/20?text=${info.symbol}'" />
+              <img src="${iconUrl}" alt="${info.symbol}" onerror="this.src='https://placehold.co/20x20?text=${info.symbol}'; console.error('Failed to load logo: ${iconUrl}');" />
               ${info.symbol}: $${price}
             `;
             ticker.appendChild(coinEl);
@@ -159,12 +162,18 @@
         });
       } catch (err) {
         console.error("Failed to fetch prices:", err);
-        ticker.innerHTML = "<span>Unable to load prices. Please try again later.</span>";
+        // Static fallback with logos
+        ticker.innerHTML = coins.map(coinKey => {
+          const info = coinInfo[coinKey];
+          return `<a class="coin" href="https://spottrading.com" target="_blank">
+                    <img src="/kamasw0wasda/${info.filename}" alt="${info.symbol}" onerror="this.src='https://placehold.co/20x20?text=${info.symbol}'; console.error('Failed to load logo: /kamasw0wasda/${info.filename}');" />
+                    ${info.symbol}: $--.--</a>`;
+        }).join("");
       }
     }
 
     fetchPrices();
-    setInterval(fetchPrices, 30000); // Update every 30 seconds to avoid rate limits
+    setInterval(fetchPrices, 30000); // Update every 30 seconds
   </script>
 </body>
 </html>
