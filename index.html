@@ -24,6 +24,7 @@
       align-items: center;
       justify-content: center;
       height: 100%;
+      padding: 0;
     }
     .spot img {
       height: 100%;
@@ -32,21 +33,24 @@
       display: block;
     }
     .ticker-wrap {
+      position: relative;
       flex-grow: 1;
       overflow: hidden;
-      position: relative;
       height: 100%;
       display: flex;
       align-items: center;
+      padding-left: 10px;
+      mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
     }
     .ticker {
       display: flex;
       white-space: nowrap;
-      animation: slide 20s linear infinite;
+      animation: slide 10s linear infinite;
     }
     @keyframes slide {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
     }
     .coin {
       display: inline-flex;
@@ -60,9 +64,6 @@
       width: 20px;
       height: 20px;
       margin-right: 6px;
-    }
-    .footer {
-      display: none;
     }
   </style>
 </head>
@@ -98,27 +99,30 @@
     async function fetchPrices() {
       try {
         const ids = coins.map(c => c.id).join(",");
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
-        );
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
         const data = await res.json();
         const ticker = document.getElementById("ticker");
-        ticker.innerHTML = "";
 
-        coins.forEach((coin) => {
-          const price = data[coin.id]?.usd?.toFixed(4) || data[coin.id]?.usd?.toFixed(2);
-          if (!price) return;
+        const coinItems = coins.map((coin) => {
+          const priceData = data[coin.id];
+          if (!priceData || !priceData.usd) {
+            console.warn(`Missing price for ${coin.id}`);
+            return '';
+          }
 
-          const coinEl = document.createElement("a");
-          coinEl.className = "coin";
-          coinEl.href = "https://spottrading.com";
-          coinEl.target = "_blank";
-          coinEl.innerHTML = `
-            <img src="${coin.logo}" alt="${coin.symbol}" />
-            ${coin.symbol}: $${price}
+          const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
+
+          return `
+            <a class="coin" href="https://spottrading.com" target="_blank">
+              <img src="${coin.logo}" alt="${coin.symbol}" />
+              ${coin.symbol}: $${price}
+            </a>
           `;
-          ticker.appendChild(coinEl);
-        });
+        }).join("");
+
+        // Duplicate for infinite seamless scroll
+        ticker.innerHTML = coinItems + coinItems;
+
       } catch (err) {
         console.error("Error fetching prices:", err);
       }
