@@ -31,6 +31,7 @@
       width: auto;
       object-fit: contain;
       display: block;
+      transform: translateX(-10px); /* Shift logo left for visual centering */
     }
     .ticker-wrap {
       position: relative;
@@ -120,9 +121,7 @@
           `;
         }).join("");
 
-        // Duplicate for infinite seamless scroll
-        ticker.innerHTML = coinItems + coinItems;
-
+        ticker.innerHTML = coinItems + coinItems; // Looping effect
       } catch (err) {
         console.error("Error fetching prices:", err);
       }
