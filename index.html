@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Crypto Widget</title>
-  <meta name="viewport" content="width=600,height=200" />
+  <meta name="viewport" content="width=600,height=80" />
   <style>
     body {
       margin: 0;
@@ -11,7 +11,7 @@
       font-family: 'Segoe UI', sans-serif;
       background: #ffffff;
       width: 600px;
-      height: 200px;
+      height: 80px;
       overflow: hidden;
     }
 
@@ -27,24 +27,24 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px;
+      padding: 5px;
       border-right: 2px solid #ddd;
       height: 100%;
-      width: 100px;
+      width: 80px;
       background-color: #ffffff;
     }
 
-    .spot-section img {
-      height: 40px;
-      margin-bottom: 5px;
-      cursor: pointer;
-    }
-
     .spot-section span {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       color: #000;
       text-align: center;
+      margin-bottom: 3px;
+    }
+
+    .spot-section img {
+      height: 30px;
+      cursor: pointer;
     }
 
     .ticker-wrapper {
@@ -70,23 +70,23 @@
     .coin {
       display: inline-flex;
       align-items: center;
-      margin: 0 20px;
-      font-size: 14px;
+      margin: 0 15px;
+      font-size: 12px;
       text-decoration: none;
       color: #000;
     }
 
     .coin img {
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
     }
 
     .footer {
       position: absolute;
-      bottom: 5px;
+      bottom: 2px;
       left: 10px;
-      font-size: 12px;
+      font-size: 10px;
       color: #888;
       background-color: #ffffff;
     }
@@ -95,10 +95,10 @@
 <body>
   <div class="container">
     <div class="spot-section">
-      <a href="https://spottrading.com" target="_blank">
-        <img src="/kamasw0wasda/spot-logo.png" alt="SPOT" onerror="this.src='https://placehold.co/40x40?text=SPOT'; console.error('SPOT logo failed to load: /kamasw0wasda/spot-logo.png');" />
-      </a>
       <span>Trade on SPOT</span>
+      <a href="https://spottrading.com" target="_blank">
+        <img src="/kamasw0wasda/spot-logo.png" alt="SPOT" onerror="this.src='https://placehold.co/30x30?text=SPOT'; console.error('SPOT logo failed to load: /kamasw0wasda/spot-logo.png');" />
+      </a>
     </div>
     <div class="ticker-wrapper">
       <div class="ticker" id="ticker"></div>
@@ -154,7 +154,7 @@
             coinEl.href = "https://spottrading.com";
             coinEl.target = "_blank";
             coinEl.innerHTML = `
-              <img src="${iconUrl}" alt="${info.symbol}" onerror="this.src='https://placehold.co/20x20?text=${info.symbol}'; console.error('Failed to load logo: ${iconUrl}');" />
+              <img src="${iconUrl}" alt="${info.symbol}" onerror="this.src='https://placehold.co/16x16?text=${info.symbol}'; console.error('Failed to load logo: ${iconUrl}');" />
               ${info.symbol}: $${price}
             `;
             ticker.appendChild(coinEl);
@@ -166,7 +166,7 @@
         ticker.innerHTML = coins.map(coinKey => {
           const info = coinInfo[coinKey];
           return `<a class="coin" href="https://spottrading.com" target="_blank">
-                    <img src="/kamasw0wasda/${info.filename}" alt="${info.symbol}" onerror="this.src='https://placehold.co/20x20?text=${info.symbol}'; console.error('Failed to load logo: /kamasw0wasda/${info.filename}');" />
+                    <img src="/kamasw0wasda/${info.filename}" alt="${info.symbol}" onerror="this.src='https://placehold.co/16x16?text=${info.symbol}'; console.error('Failed to load logo: /kamasw0wasda/${info.filename}');" />
                     ${info.symbol}: $--.--</a>`;
         }).join("");
       }
