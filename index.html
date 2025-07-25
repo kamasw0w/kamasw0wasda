@@ -3,81 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <title>Crypto Widget</title>
-  <meta name="viewport" content="width=600,height=200" />
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #ffffff;
+      font-family: Arial, sans-serif;
+      background: #fff;
       width: 600px;
       height: 200px;
       overflow: hidden;
     }
-
     .container {
       display: flex;
       align-items: center;
       height: 100%;
     }
-
-    .spot-section {
+    .spot {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px;
-      border-right: 2px solid #ddd;
-      height: 100%;
       width: 100px;
+      border-right: 1px solid #ddd;
+      height: 100%;
     }
-
-    .spot-section img {
+    .spot img {
       height: 40px;
+      display: block;
       margin-bottom: 5px;
-      cursor: pointer;
     }
-
-    .spot-section span {
+    .spot span {
       font-size: 14px;
       font-weight: bold;
-      color: #000;
       text-align: center;
     }
-
-    .ticker-wrapper {
+    .ticker-wrap {
       overflow: hidden;
-      position: relative;
       flex-grow: 1;
+      position: relative;
     }
-
     .ticker {
       display: flex;
-      align-items: center;
       white-space: nowrap;
-      animation: slide 15s linear infinite;
+      animation: slide 12s linear infinite;
     }
-
     @keyframes slide {
-      from { transform: translateX(100%); }
-      to { transform: translateX(-100%); }
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
     }
-
     .coin {
       display: inline-flex;
       align-items: center;
-      margin: 0 20px;
+      margin: 0 16px;
       font-size: 14px;
       text-decoration: none;
       color: #000;
     }
-
     .coin img {
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
     }
-
     .footer {
       position: absolute;
       bottom: 5px;
@@ -89,46 +74,34 @@
 </head>
 <body>
   <div class="container">
-    <div class="spot-section">
-      <a href="https://t.co/FWAaTbZU7" target="_blank">
-        <img src="https://kamasw0w.github.io/kamasw0wasda/spot-logo.png" alt="SPOT" />
+    <div class="spot">
+      <a href="https://spottrading.com" target="_blank">
+        <img src="spot-logo.png" alt="Spot Logo" />
       </a>
       <span>Trade on SPOT</span>
     </div>
-    <div class="ticker-wrapper">
-      <div class="ticker" id="ticker"></div>
+    <div class="ticker-wrap">
+      <div id="ticker" class="ticker"></div>
     </div>
   </div>
   <div class="footer">spottrading.com</div>
 
   <script>
-    const coins = [
-      "bitcoin",
-      "ethereum",
-      "binancecoin",
-      "solana",
-      "ripple",
-      "dogecoin"
-    ];
-
+    const coins = ["bitcoin", "ethereum", "binancecoin", "solana", "ripple", "dogecoin"];
     const coinInfo = {
-      bitcoin: { symbol: "BTC", iconId: 1 },
-      ethereum: { symbol: "ETH", iconId: 279 },
-      binancecoin: { symbol: "BNB", iconId: 825 },
-      solana: { symbol: "SOL", iconId: 4128 },
-      ripple: { symbol: "XRP", iconId: 44 },
-      dogecoin: { symbol: "DOGE", iconId: 74 }
+      bitcoin: { symbol: "BTC" },
+      ethereum: { symbol: "ETH" },
+      binancecoin: { symbol: "BNB" },
+      solana: { symbol: "SOL" },
+      ripple: { symbol: "XRP" },
+      dogecoin: { symbol: "DOGE" }
     };
-
-    const ticker = document.getElementById("ticker");
 
     async function fetchPrices() {
       try {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`
-        );
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(",")}&vs_currencies=usd`);
         const data = await res.json();
-
+        const ticker = document.getElementById("ticker");
         ticker.innerHTML = "";
 
         coins.forEach((coinKey) => {
@@ -136,11 +109,11 @@
           if (!info || !data[coinKey]) return;
 
           const price = data[coinKey].usd.toFixed(2);
-          const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
+          const iconUrl = `https://coinicons-api.vercel.app/api/icon/${info.symbol.toLowerCase()}`;
 
           const coinEl = document.createElement("a");
           coinEl.className = "coin";
-          coinEl.href = "https://t.co/FWAaTbZU7";
+          coinEl.href = "https://spottrading.com";
           coinEl.target = "_blank";
           coinEl.innerHTML = `
             <img src="${iconUrl}" alt="${info.symbol}" />
@@ -149,7 +122,7 @@
           ticker.appendChild(coinEl);
         });
       } catch (err) {
-        console.error("Failed to fetch prices:", err);
+        console.error("Error fetching prices:", err);
       }
     }
 
