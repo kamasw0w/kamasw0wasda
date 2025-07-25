@@ -153,8 +153,60 @@
       }
     }
 
-    fetchPrices();
-    setInterval(fetchPrices, 15000); // update every 15s
-  </script>
-</body>
-</html>
+   <script>
+  const coins = [
+    "bitcoin",
+    "ethereum",
+    "binancecoin",
+    "solana",
+    "ripple",
+    "dogecoin"
+  ];
+
+  const coinInfo = {
+    bitcoin: { symbol: "BTC", iconId: 1 },
+    ethereum: { symbol: "ETH", iconId: 279 },
+    binancecoin: { symbol: "BNB", iconId: 825 },
+    solana: { symbol: "SOL", iconId: 4128 },
+    ripple: { symbol: "XRP", iconId: 44 },
+    dogecoin: { symbol: "DOGE", iconId: 74 }
+  };
+
+  const ticker = document.getElementById("ticker");
+
+  async function fetchPrices() {
+    try {
+      const res = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(
+          ","
+        )}&vs_currencies=usd`
+      );
+      const data = await res.json();
+
+      ticker.innerHTML = ""; // Clear previous
+
+      coins.forEach((coinKey) => {
+        const info = coinInfo[coinKey];
+        if (!info) return;
+
+        const price = data[coinKey]?.usd?.toFixed(2);
+        const iconUrl = `https://assets.coingecko.com/coins/images/${info.iconId}/thumb.png`;
+
+        const coinEl = document.createElement("a");
+        coinEl.className = "coin";
+        coinEl.href = "https://t.co/FWAaTbZU7";
+        coinEl.target = "_blank";
+        coinEl.innerHTML = `
+          <img src="${iconUrl}" alt="${info.symbol}" />
+          ${info.symbol}: $${price}
+        `;
+        ticker.appendChild(coinEl);
+      });
+    } catch (err) {
+      console.error("Failed to fetch prices:", err);
+    }
+  }
+
+  fetchPrices();
+  setInterval(fetchPrices, 15000); // update every 15s
+</script>
