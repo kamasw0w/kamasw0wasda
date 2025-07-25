@@ -18,14 +18,15 @@
       position: relative;
     }
     .spot {
-      width: 80px; /* Slightly wider for proper centering */
+      width: 80px;
       background: #fff;
       border-right: 1px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
-      margin-left: -5px; /* Move the square slightly left */
+      margin-left: -10px;
+      z-index: 2;
     }
     .spot img {
       height: 100%;
@@ -40,7 +41,8 @@
       height: 100%;
       display: flex;
       align-items: center;
-      padding-left: 20px; /* Added spacing so text doesn’t hit the Spot logo */
+      padding-left: 30px;
+      z-index: 1;
     }
     .ticker {
       display: flex;
@@ -104,11 +106,7 @@
 
         const coinItems = coins.map((coin) => {
           const priceData = data[coin.id];
-          if (!priceData || !priceData.usd) {
-            console.warn(`Missing price for ${coin.id}`);
-            return '';
-          }
-
+          if (!priceData || !priceData.usd) return '';
           const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
           return `
             <a class="coin" href="https://spottrading.com" target="_blank">
