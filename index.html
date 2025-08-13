@@ -51,7 +51,7 @@
       white-space: nowrap;
       animation: slide 40s linear infinite;
       position: relative;
-      z-index: 1; /* make sure it stays on top of the background */
+      z-index: 1;
     }
     @keyframes slide {
       0% { transform: translateX(0%); }
@@ -64,12 +64,17 @@
       font-size: 9px;
       font-weight: 700;
       text-decoration: none;
-      color: #000000;
+      color: #ffffff; /* White text for glow */
+      text-shadow: 
+        0 0 4px rgba(255,255,255,0.9), 
+        0 0 8px rgba(255,255,255,0.7),
+        0 0 12px rgba(255,255,255,0.5);
     }
     .coin img {
       width: 16px;
       height: 16px;
       margin-right: 4px;
+      filter: drop-shadow(0 0 2px rgba(255,255,255,0.8));
     }
   </style>
 </head>
