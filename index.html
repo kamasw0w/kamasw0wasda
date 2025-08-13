@@ -42,7 +42,7 @@
       display: flex;
       align-items: center;
       padding-left: 20px;
-      background: #ffffff;
+      background: orange;
     }
     .ticker {
       display: flex;
@@ -108,23 +108,4 @@
         const coinItems = coins.map((coin) => {
           const priceData = data[coin.id];
           if (!priceData || !priceData.usd) return '';
-          const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
-          return `
-            <a class="coin" href="https://spottrading.com" target="_blank">
-              <img src="${coin.logo}" alt="${coin.symbol}" />
-              ${coin.symbol}: $${price}
-            </a>
-          `;
-        }).join("");
-
-        ticker.innerHTML = coinItems + coinItems;
-      } catch (err) {
-        console.error("Error fetching prices:", err);
-      }
-    }
-
-    fetchPrices();
-    setInterval(fetchPrices, 15000);
-  </script>
-</body>
-</html>
+          const price = priceData.usd.
