@@ -12,6 +12,7 @@
       height: 50px;
       background: #ffffff;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
     .container {
       display: flex;
@@ -20,17 +21,17 @@
     }
     .spot {
       width: 110px;
-      background: #FF8C00; /* Dark Orange background around SPOT logo */
       border-right: 1px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
       padding-left: 5px;
+      position: relative;
       z-index: 2;
     }
     .spot img {
-      height: 80%;
+      height: 100%;
       width: auto;
       object-fit: contain;
       display: block;
@@ -49,12 +50,12 @@
     .ticker {
       display: flex;
       white-space: nowrap;
-      animation: slide 40s linear infinite;
       position: relative;
       z-index: 1;
+      animation: slide 40s linear infinite;
     }
     @keyframes slide {
-      0% { transform: translateX(0%); }
+      0%   { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
     .coin {
@@ -64,9 +65,9 @@
       font-size: 9px;
       font-weight: 700;
       text-decoration: none;
-      color: #ffffff; /* White text for glow */
-      text-shadow: 
-        0 0 4px rgba(255,255,255,0.9), 
+      color: #ffffff;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.9),
         0 0 8px rgba(255,255,255,0.7),
         0 0 12px rgba(255,255,255,0.5);
     }
@@ -78,11 +79,11 @@
     }
   </style>
 </head>
-<body style="background-color:#ffffff;">
-  <div class="container" style="background-color:#ffffff;">
+<body>
+  <div class="container">
     <div class="spot">
       <a href="https://spottrading.com" target="_blank">
-        <img src="spot-logo.png" alt="Spot Logo" />
+        <img src="Projekt bez nazwy (12).png" alt="Spot Logo" />
       </a>
     </div>
     <div class="ticker-wrap">
@@ -92,19 +93,19 @@
 
   <script>
     const coins = [
-      { id: "bitcoin", symbol: "BTC", logo: "bitcoin-btc-logo.png" },
-      { id: "ethereum", symbol: "ETH", logo: "ethereum-eth-logo.png" },
-      { id: "binancecoin", symbol: "BNB", logo: "bnb-bnb-logo.png" },
-      { id: "solana", symbol: "SOL", logo: "solana-sol-logo.png" },
-      { id: "ripple", symbol: "XRP", logo: "xrp-xrp-logo.png" },
-      { id: "dogecoin", symbol: "DOGE", logo: "dogecoin-doge-logo.png" },
-      { id: "avalanche-2", symbol: "AVAX", logo: "avalanche-avax-logo.png" },
-      { id: "cardano", symbol: "ADA", logo: "cardano-ada-logo.png" },
-      { id: "chainlink", symbol: "LINK", logo: "chainlink-link-logo.png" },
-      { id: "polkadot", symbol: "DOT", logo: "polkadot-new-dot-logo.png" },
-      { id: "shiba-inu", symbol: "SHIB", logo: "shiba-inu-shib-logo.png" },
-      { id: "the-open-network", symbol: "TON", logo: "toncoin-ton-logo.png" },
-      { id: "tron", symbol: "TRX", logo: "tron-trx-logo.png" }
+      { id: "bitcoin",           symbol: "BTC",  logo: "bitcoin-btc-logo.png" },
+      { id: "ethereum",          symbol: "ETH",  logo: "ethereum-eth-logo.png" },
+      { id: "binancecoin",       symbol: "BNB",  logo: "bnb-bnb-logo.png" },
+      { id: "solana",            symbol: "SOL",  logo: "solana-sol-logo.png" },
+      { id: "ripple",            symbol: "XRP",  logo: "xrp-xrp-logo.png" },
+      { id: "dogecoin",          symbol: "DOGE", logo: "dogecoin-doge-logo.png" },
+      { id: "avalanche-2",       symbol: "AVAX", logo: "avalanche-avax-logo.png" },
+      { id: "cardano",           symbol: "ADA",  logo: "cardano-ada-logo.png" },
+      { id: "chainlink",         symbol: "LINK", logo: "chainlink-link-logo.png" },
+      { id: "polkadot",          symbol: "DOT",  logo: "polkadot-new-dot-logo.png" },
+      { id: "shiba-inu",         symbol: "SHIB", logo: "shiba-inu-shib-logo.png" },
+      { id: "the-open-network",  symbol: "TON",  logo: "toncoin-ton-logo.png" },
+      { id: "tron",              symbol: "TRX",  logo: "tron-trx-logo.png" }
     ];
 
     async function fetchPrices() {
@@ -116,7 +117,7 @@
 
         const coinItems = coins.map((coin) => {
           const priceData = data[coin.id];
-          if (!priceData || !priceData.usd) return '';
+          if (!priceData || priceData.usd == null) return '';
           const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
           return `
             <a class="coin" href="https://spottrading.com" target="_blank">
