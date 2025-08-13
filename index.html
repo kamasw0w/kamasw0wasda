@@ -27,6 +27,7 @@
       justify-content: center;
       height: 100%;
       padding-left: 5px;
+      z-index: 2;
     }
     .spot img {
       height: 80%;
@@ -43,11 +44,14 @@
       align-items: center;
       padding-left: 20px;
       background: orange;
+      z-index: 0;
     }
     .ticker {
       display: flex;
       white-space: nowrap;
       animation: slide 40s linear infinite;
+      position: relative;
+      z-index: 1; /* make sure it stays on top of the background */
     }
     @keyframes slide {
       0% { transform: translateX(0%); }
@@ -108,4 +112,23 @@
         const coinItems = coins.map((coin) => {
           const priceData = data[coin.id];
           if (!priceData || !priceData.usd) return '';
-          const price = priceData.usd.
+          const price = priceData.usd.toFixed(priceData.usd < 1 ? 4 : 2);
+          return `
+            <a class="coin" href="https://spottrading.com" target="_blank">
+              <img src="${coin.logo}" alt="${coin.symbol}" />
+              ${coin.symbol}: $${price}
+            </a>
+          `;
+        }).join("");
+
+        ticker.innerHTML = coinItems + coinItems;
+      } catch (err) {
+        console.error("Error fetching prices:", err);
+      }
+    }
+
+    fetchPrices();
+    setInterval(fetchPrices, 15000);
+  </script>
+</body>
+</html>
