@@ -26,13 +26,13 @@
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding-left: 5px;
       position: relative;
       z-index: 2;
+      background: #FF8C00;
     }
     .spot img {
-      height: 100%;
-      width: auto;
+      max-height: 80%;  /* zoom out so it fits fully */
+      max-width: 90%;   /* ensure it doesn't overflow horizontally */
       object-fit: contain;
       display: block;
     }
